@@ -132,7 +132,7 @@ public class MessageTest {
 
     private NewOrderSingle createNewOrderSingle() {
         return new NewOrderSingle(new ClOrdID("CLIENT"), new HandlInst(
-                '2'), new Symbol("ORCL"),
+                HandlInst.AUTOMATED_EXECUTION_ORDER_PUBLIC_BROKER_INTERVENTION_OK), new Symbol("ORCL"),
                 new Side(Side.BUY), new TransactTime(new Date(0)), new OrdType(OrdType.LIMIT));
     }
 
@@ -206,7 +206,7 @@ public class MessageTest {
     public void testEmbeddedMessage() throws Exception {
 
         final ExecutionReport report = new ExecutionReport(new OrderID("ORDER"),
-                new ExecID("EXEC"), new ExecType('2'), new OrdStatus(OrdStatus.FILLED),
+                new ExecID("EXEC"), new ExecType(ExecType.TRADE), new OrdStatus(OrdStatus.FILLED),
                 new Side(Side.BUY), new LeavesQty(100), new CumQty(100), new AvgPx(50));
 
         final NewOrderSingle order = createNewOrderSingle();
@@ -585,7 +585,8 @@ public class MessageTest {
         noc.setString(Symbol.FIELD, "ABC");
         noc.setString(TransactTime.FIELD, "20060319-09:08:19");
         noc.setString(CrossID.FIELD, "184214");
-        noc.setInt(CrossType.FIELD, 2);
+        noc.setInt(CrossType.FIELD,
+                CrossType.CROSS_IOC_CROSS_TRADE_WHICH_IS_EXECUTED_PARTIALLY_AND_THE_REST_IS_CANCELLED_ONE_SIDE_IS_FULLY_EXECUTED_THE_OTHER_SIDE_IS_PARTIALLY_EXECUTED_WITH_THE_REMAINDER_BEING_CANCELLED_THIS_IS_EQUIVALENT_TO_AN_IOC_ON_THE_OTHER_SIDE_NOTE_CROSSPRIORITIZATION_FIELD_MAY_BE_USED_TO_INDICATE_WHICH_SIDE_SHOULD_FULLY_EXECUTE_IN_THIS_SCENARIO_);
         noc.setInt(CrossPrioritization.FIELD, CrossPrioritization.NONE);
 
         final NewOrderCross.NoSides side = new NewOrderCross.NoSides();
@@ -769,7 +770,7 @@ public class MessageTest {
         final Message message = new quickfix.fix44.NewOrderSingle();
         final quickfix.fix44.NewOrderSingle.NoPartyIDs partyIdGroup = new quickfix.fix44.NewOrderSingle.NoPartyIDs();
         partyIdGroup.set(new PartyID("PARTY_1"));
-        partyIdGroup.set(new PartyIDSource('I'));
+        partyIdGroup.set(new PartyIDSource(PartyIDSource.DIRECTED_BROKER_THREE_CHARACTER_ACRONYM_AS_DEFINED_IN_ISITC_ETC_BEST_PRACTICE_GUIDELINES_DOCUMENT));
         partyIdGroup.set(new PartyRole(PartyRole.INTRODUCING_FIRM));
         message.addGroup(partyIdGroup);
         final Message clonedMessage = (Message) message.clone();
