@@ -219,7 +219,7 @@ public class DataDictionaryTest extends TestCase {
         newSingle.setField(new Price(42.37));
         newSingle.setField(new HandlInst());
         newSingle.setField(new Symbol("QFJ"));
-        newSingle.setField(new HandlInst(HandlInst.MANUAL_ORDER));
+        newSingle.setField(new HandlInst('3'));
         newSingle.setField(new TimeInForce(TimeInForce.DAY));
         newSingle.setField(new Account("testAccount"));
 
@@ -236,7 +236,7 @@ public class DataDictionaryTest extends TestCase {
 
     public void testMessageDataDictionaryMismatch() throws Exception {
         final quickfix.fix43.NewOrderSingle newSingle = new quickfix.fix43.NewOrderSingle(
-                new ClOrdID("123"), new HandlInst(HandlInst.MANUAL_ORDER), new Side(Side.BUY), new TransactTime(), new OrdType(
+                new ClOrdID("123"), new HandlInst('3'), new Side(Side.BUY), new TransactTime(), new OrdType(
                         OrdType.LIMIT));
         newSingle.setField(new OrderQty(42));
         newSingle.setField(new Price(42.37));
@@ -311,7 +311,7 @@ public class DataDictionaryTest extends TestCase {
         newSingle.setField(new Price(42.37));
         newSingle.setField(new HandlInst());
         newSingle.setField(new Symbol("QFJ"));
-        newSingle.setField(new HandlInst(HandlInst.MANUAL_ORDER));
+        newSingle.setField(new HandlInst('3'));
         newSingle.setField(new TimeInForce(TimeInForce.DAY));
         newSingle.setField(new Account("testAccount"));
 

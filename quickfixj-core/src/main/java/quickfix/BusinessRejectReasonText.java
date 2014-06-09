@@ -34,7 +34,7 @@ public class BusinessRejectReasonText extends BusinessRejectReason {
     static {
         rejectReasonText.put(FIELD, "Field");
         rejectReasonText.put(OTHER, "Other");
-        rejectReasonText.put(UNKOWN_ID, "Unknown ID");
+        rejectReasonText.put(1, "Unknown ID");
         rejectReasonText.put(UNKNOWN_SECURITY, "Unknown Security");
         rejectReasonText.put(UNSUPPORTED_MESSAGE_TYPE, "Unsupported Message Type");
         rejectReasonText.put(APPLICATION_NOT_AVAILABLE, "Application Not Available");

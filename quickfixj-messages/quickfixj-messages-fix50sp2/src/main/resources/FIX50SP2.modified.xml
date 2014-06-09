@@ -3502,8 +3502,8 @@
     </component>
     <component name="StrmAsgnRptGrp">
       <group name="NoAsgnReqs" required="N">
-		<!-- MODIFIED: added dummy StreamAsgnReqType field for code generator to work -->
-		<field name="StreamAsgnReqType" required="N"/>
+        <!-- MODIFIED: added dummy StreamAsgnReqType field for code generator to work -->
+        <field name="StreamAsgnReqType" required="N"/>
         <component name="Parties" required="N"/>
         <component name="StrmAsgnRptInstrmtGrp" required="N"/>
       </group>
@@ -3786,8 +3786,8 @@
     </component>
     <component name="StrmAsgnReqGrp">
       <group name="NoAsgnReqs" required="N">
-		<!-- MODIFIED: added dummy StreamAsgnReqType field for code generator to work -->
-		<field name="StreamAsgnReqType" required="N"/>
+        <!-- MODIFIED: added dummy StreamAsgnReqType field for code generator to work -->
+        <field name="StreamAsgnReqType" required="N"/>
         <component name="Parties" required="N"/>
         <component name="StrmAsgnReqInstrmtGrp" required="N"/>
       </group>
@@ -5753,7 +5753,8 @@
       <value enum="2" description="BACKGROUND"/>
     </field>
     <field number="62" name="ValidUntilTime" type="UTCTIMESTAMP"/>
-    <field number="63" name="SettlType" type="STRING">
+    <!-- MODIFIED: changed from STRING to CHAR for backward compatibility -->
+    <field number="63" name="SettlType" type="CHAR">
       <value enum="0" description="REGULAR_FX_SPOT_SETTLEMENT"/>
       <value enum="1" description="CASH"/>
       <value enum="2" description="NEXT_DAY"/>
@@ -5987,10 +5988,6 @@
     <field number="149" name="URLLink" type="STRING"/>
     <field number="150" name="ExecType" type="CHAR">
       <value enum="0" description="NEW"/>
-	  <!-- MODIFIED: values 1 and 2 were removed from the spec,
-	       but are added here in order for the code generator to work -->
-	  <value enum="1" description="PARTIAL_FILL"/>
-	  <value enum="2" description="FILL"/>
       <value enum="3" description="DONE_FOR_DAY"/>
       <value enum="4" description="CANCELED"/>
       <value enum="5" description="REPLACED"/>
@@ -6379,18 +6376,21 @@
     <field number="236" name="Yield" type="PERCENTAGE"/>
     <field number="237" name="TotalTakedown" type="AMT"/>
     <field number="238" name="Concession" type="AMT"/>
-    <field number="239" name="RepoCollateralSecurityType" type="STRING"/>
+    <!-- MODIFIED: changed from STRING to INT for backward compatibility -->
+    <field number="239" name="RepoCollateralSecurityType" type="INT"/>
     <field number="240" name="RedemptionDate" type="LOCALMKTDATE"/>
     <field number="241" name="UnderlyingCouponPaymentDate" type="LOCALMKTDATE"/>
     <field number="242" name="UnderlyingIssueDate" type="LOCALMKTDATE"/>
-    <field number="243" name="UnderlyingRepoCollateralSecurityType" type="STRING"/>
+    <!-- MODIFIED: changed from STRING to INT for backward compatibility -->
+    <field number="243" name="UnderlyingRepoCollateralSecurityType" type="INT"/>
     <field number="244" name="UnderlyingRepurchaseTerm" type="INT"/>
     <field number="245" name="UnderlyingRepurchaseRate" type="PERCENTAGE"/>
     <field number="246" name="UnderlyingFactor" type="FLOAT"/>
     <field number="247" name="UnderlyingRedemptionDate" type="LOCALMKTDATE"/>
     <field number="248" name="LegCouponPaymentDate" type="LOCALMKTDATE"/>
     <field number="249" name="LegIssueDate" type="LOCALMKTDATE"/>
-    <field number="250" name="LegRepoCollateralSecurityType" type="STRING"/>
+    <!-- MODIFIED: changed from STRING to INT for backward compatibility -->
+    <field number="250" name="LegRepoCollateralSecurityType" type="INT"/>
     <field number="251" name="LegRepurchaseTerm" type="INT"/>
     <field number="252" name="LegRepurchaseRate" type="PERCENTAGE"/>
     <field number="253" name="LegFactor" type="FLOAT"/>
@@ -6819,7 +6819,8 @@
       <value enum="25" description="CROSS_SYSTEM_HAS_CROSSED_A_PERCENTAGE_OF_THE_ORDERS_AND_ALLOWS_MARKET_TO_RESPOND_PRIOR_TO_CROSSING_REMAINING_PORTION"/>
       <value enum="26" description="POST_CLOSE"/>
     </field>
-    <field number="327" name="HaltReason" type="INT">
+    <!-- MODIFIED: changed from INT to CHAR for backward compatibility -->
+    <field number="327" name="HaltReason" type="CHAR">
       <value enum="0" description="NEWS_DISSEMINATION"/>
       <value enum="1" description="ORDER_INFLUX"/>
       <value enum="2" description="ORDER_IMBALANCE"/>
@@ -9362,7 +9363,7 @@
     <field number="1182" name="ApplBegSeqNum" type="SEQNUM"/>
     <field number="1183" name="ApplEndSeqNum" type="SEQNUM"/>
     <field number="1184" name="SecurityXMLLen" type="LENGTH"/>
-	<!-- MODIFIED: SecurityXML renamed to SecurityXMLData to prevent duplicate value -->
+    <!-- MODIFIED: SecurityXML renamed to SecurityXMLData to prevent duplicate value -->
     <field number="1185" name="SecurityXMLData" type="XMLDATA"/>
     <field number="1186" name="SecurityXMLSchema" type="STRING"/>
     <field number="1187" name="RefreshIndicator" type="BOOLEAN"/>
@@ -9486,7 +9487,7 @@
     <field number="1280" name="DerivativeEncodedSecurityDescLen" type="LENGTH"/>
     <field number="1281" name="DerivativeEncodedSecurityDesc" type="DATA"/>
     <field number="1282" name="DerivativeSecurityXMLLen" type="LENGTH"/>
-	<!-- MODIFIED: DerivativeSecurityXML renamed to DerivativeSecurityXMLData to prevent duplicate value -->
+    <!-- MODIFIED: DerivativeSecurityXML renamed to DerivativeSecurityXMLData to prevent duplicate value -->
     <field number="1283" name="DerivativeSecurityXMLData" type="DATA"/>
     <field number="1284" name="DerivativeSecurityXMLSchema" type="STRING"/>
     <field number="1285" name="DerivativeContractSettlMonth" type="MONTHYEAR"/>

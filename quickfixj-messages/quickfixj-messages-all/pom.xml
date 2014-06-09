@@ -26,6 +26,16 @@
 		</dependency>
 		<dependency>
 			<groupId>org.quickfixj</groupId>
+			<artifactId>quickfixj-messages-fix50sp2</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quickfixj</groupId>
+			<artifactId>quickfixj-messages-fix50sp1</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quickfixj</groupId>
 			<artifactId>quickfixj-messages-fix50</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -52,22 +62,6 @@
 		<dependency>
 			<groupId>org.quickfixj</groupId>
 			<artifactId>quickfixj-messages-fix40</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<!--
-			We add these at the end to remain backwards-compatible with previous
-			releases of the messages-all jar, in which duplicate classes were
-			resolved by using the 5.0 version.
-		-->
-		<dependency>
-			<groupId>org.quickfixj</groupId>
-			<artifactId>quickfixj-messages-fix50sp2</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quickfixj</groupId>
-			<artifactId>quickfixj-messages-fix50sp1</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
