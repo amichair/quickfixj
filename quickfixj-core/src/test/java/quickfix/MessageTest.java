@@ -34,70 +34,9 @@ import java.util.TimeZone;
 import org.junit.Test;
 
 import org.quickfixj.CharsetSupport;
-import quickfix.field.Account;
-import quickfix.field.AllocAccount;
-import quickfix.field.AllocShares;
-import quickfix.field.ApplVerID;
-import quickfix.field.AvgPx;
-import quickfix.field.BeginString;
-import quickfix.field.BidType;
-import quickfix.field.BodyLength;
-import quickfix.field.CheckSum;
-import quickfix.field.ClOrdID;
-import quickfix.field.CountryOfIssue;
-import quickfix.field.CrossID;
-import quickfix.field.CrossPrioritization;
-import quickfix.field.CrossType;
-import quickfix.field.CstmApplVerID;
-import quickfix.field.CumQty;
-import quickfix.field.EncodedText;
-import quickfix.field.EncodedTextLen;
-import quickfix.field.EncryptMethod;
-import quickfix.field.ExecID;
-import quickfix.field.ExecType;
-import quickfix.field.HandlInst;
-import quickfix.field.Headline;
-import quickfix.field.HopCompID;
-import quickfix.field.IOIid;
-import quickfix.field.LeavesQty;
-import quickfix.field.ListID;
-import quickfix.field.ListSeqNo;
-import quickfix.field.MDEntryPx;
-import quickfix.field.MsgDirection;
-import quickfix.field.MsgSeqNum;
-import quickfix.field.MsgType;
-import quickfix.field.NoOrders;
-import quickfix.field.OrdStatus;
-import quickfix.field.OrdType;
-import quickfix.field.OrderID;
-import quickfix.field.OrderQty;
-import quickfix.field.PartyID;
-import quickfix.field.PartyIDSource;
-import quickfix.field.PartyRole;
-import quickfix.field.Price;
-import quickfix.field.RawData;
-import quickfix.field.RawDataLength;
-import quickfix.field.RefMsgType;
-import quickfix.field.SecureData;
-import quickfix.field.SecurityID;
-import quickfix.field.SecurityIDSource;
-import quickfix.field.SecurityType;
-import quickfix.field.SenderCompID;
-import quickfix.field.SendingTime;
-import quickfix.field.SessionRejectReason;
-import quickfix.field.Side;
-import quickfix.field.Signature;
-import quickfix.field.SignatureLength;
-import quickfix.field.Symbol;
-import quickfix.field.TargetCompID;
-import quickfix.field.TargetSubID;
-import quickfix.field.TotNoOrders;
-import quickfix.field.TransactTime;
-import quickfix.field.UnderlyingCurrency;
-import quickfix.field.UnderlyingSymbol;
-import quickfix.fix42.NewOrderSingle;
-import quickfix.fix43.Message.Header;
-import quickfix.fix43.NewOrderList;
+import quickfix.fix44.NewOrderSingle;
+import quickfix.fix44.Message.Header;
+import quickfix.fix44.NewOrderList;
 import quickfix.fix44.ExecutionReport;
 import quickfix.fix44.IndicationOfInterest;
 import quickfix.fix44.Logon;
@@ -107,6 +46,7 @@ import quickfix.fix44.NewOrderSingle.NoPartyIDs;
 import quickfix.fix44.News;
 import quickfix.fix44.component.Instrument;
 import quickfix.fix44.component.Parties;
+import quickfix.fix44.field.*;
 import quickfix.fix50.MarketDataSnapshotFullRefresh;
 
 public class MessageTest {
@@ -131,9 +71,9 @@ public class MessageTest {
     }
 
     private NewOrderSingle createNewOrderSingle() {
-        return new NewOrderSingle(new ClOrdID("CLIENT"), new HandlInst(
-                HandlInst.AUTOMATED_EXECUTION_ORDER_PUBLIC), new Symbol("ORCL"),
-                new Side(Side.BUY), new TransactTime(new Date(0)), new OrdType(OrdType.LIMIT));
+        return new NewOrderSingle(new ClOrdID("CLIENT"), new Side(Side.BUY),
+                new TransactTime(new Date(0)),
+                new OrdType(OrdType.LIMIT));
     }
 
     @Test
@@ -565,8 +505,8 @@ public class MessageTest {
 
     @Test
     public void testFix5HeaderFields() {
-        assertTrue(Message.isHeaderField(ApplVerID.FIELD));
-        assertTrue(Message.isHeaderField(CstmApplVerID.FIELD));
+        assertTrue(Message.isHeaderField(quickfix.fix50.field.ApplVerID.FIELD));
+        assertTrue(Message.isHeaderField(quickfix.fix50.field.CstmApplVerID.FIELD));
     }
 
     @Test
@@ -1289,7 +1229,7 @@ public class MessageTest {
             assertEquals(m.getString(461), "RCSXX=0");
             final MarketDataSnapshotFullRefresh.NoMDEntries group = new MarketDataSnapshotFullRefresh.NoMDEntries();
             m.getGroup(1, group);
-            final MDEntryPx px = new MDEntryPx();
+            final quickfix.fix50.field.MDEntryPx px = new quickfix.fix50.field.MDEntryPx();
             group.get(px);
             assertEquals(px.objectAsString(), "1.38898");
         } catch (final Exception e) {
@@ -1314,7 +1254,7 @@ public class MessageTest {
             assertEquals(m.getString(461), "RCSXX=0");
             final MarketDataSnapshotFullRefresh.NoMDEntries group = new MarketDataSnapshotFullRefresh.NoMDEntries();
             m.getGroup(1, group);
-            final MDEntryPx px = new MDEntryPx();
+            final quickfix.fix50.field.MDEntryPx px = new quickfix.fix50.field.MDEntryPx();
             group.get(px);
             assertEquals(px.objectAsString(), "1.38898");
         } catch (final Exception e) {
@@ -1396,7 +1336,7 @@ public class MessageTest {
 
         try {
             final String accountId = numAllocs.getField(new AllocAccount()).getValue();
-            final Object shares = numAllocs.getField(new AllocShares()).getObject();
+            final Object shares = numAllocs.getField(new AllocQty()).getObject();
             message.getGroup(1, numAllocs);
             assertAllocation(accountId, shares);
             message.getGroup(2, numAllocs);
@@ -1428,10 +1368,10 @@ public class MessageTest {
     private NewOrderSingle.NoAllocs setUpGroups(Message message) {
         final NewOrderSingle.NoAllocs numAllocs = new NewOrderSingle.NoAllocs();
         numAllocs.set(new AllocAccount("AllocACC1"));
-        numAllocs.setField(new StringField(AllocShares.FIELD, "1010.10"));
+        numAllocs.setField(new StringField(AllocQty.FIELD, "1010.10"));
         message.addGroup(numAllocs);
         numAllocs.setField(new AllocAccount("AllocACC2"));
-        numAllocs.setField(new StringField(AllocShares.FIELD, "2020.20"));
+        numAllocs.setField(new StringField(AllocQty.FIELD, "2020.20"));
         message.addGroup(numAllocs);
         return numAllocs;
     }

@@ -47,7 +47,7 @@ import quickfix.SessionNotFound;
 import quickfix.SessionSettings;
 import quickfix.SocketAcceptor;
 import quickfix.UnsupportedMessageType;
-import quickfix.field.ListID;
+import quickfix.fix44.field.ListID;
 import quickfix.fix44.ListStatusRequest;
 import quickfix.fix44.Logon;
 

@@ -5,10 +5,10 @@ import static quickfix.FixVersions.*;
 
 import org.junit.Test;
 
-import quickfix.field.LinesOfText;
-import quickfix.field.MsgType;
-import quickfix.field.NoLinesOfText;
-import quickfix.field.NoMDEntries;
+import quickfix.fix44.field.LinesOfText;
+import quickfix.fix44.field.MsgType;
+import quickfix.fix44.field.NoMDEntries;
+import quickfix.fix50.field.NoLinesOfText;
 import quickfix.test.util.ExpectedTestFailure;
 
 /**

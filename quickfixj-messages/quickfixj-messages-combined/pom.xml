@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.quickfixj</groupId>
+		<artifactId>quickfixj-messages</artifactId>
+		<version>1.6.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>quickfixj-messages-combined</artifactId>
+	<packaging>bundle</packaging>
+
+	<name>QuickFIX/J Message classes for combined FIX versions</name>
+	<description>QuickFIX/J Message classes for combined FIX versions</description>
+	<url>http://www.quickfixj.org</url>
+
+	<properties>
+		<fix.spec>FIX.combined.xml</fix.spec>
+		<fix.name>combined</fix.name>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.quickfixj</groupId>
+				<artifactId>quickfixj-codegenerator</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<id>${fix.name}</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<fieldPackage>quickfix.field</fieldPackage>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>quickfix/field/**</include>
+						<include>${fix.spec}</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

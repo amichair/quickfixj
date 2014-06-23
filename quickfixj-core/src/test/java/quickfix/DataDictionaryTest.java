@@ -24,26 +24,26 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 import junit.framework.TestCase;
-import quickfix.field.Account;
-import quickfix.field.BodyLength;
-import quickfix.field.CheckSum;
-import quickfix.field.ClOrdID;
-import quickfix.field.HandlInst;
-import quickfix.field.LastMkt;
-import quickfix.field.MsgSeqNum;
-import quickfix.field.MsgType;
-import quickfix.field.NoHops;
-import quickfix.field.OrdType;
-import quickfix.field.OrderQty;
-import quickfix.field.Price;
-import quickfix.field.SenderCompID;
-import quickfix.field.SenderSubID;
-import quickfix.field.SendingTime;
-import quickfix.field.Side;
-import quickfix.field.Symbol;
-import quickfix.field.TargetCompID;
-import quickfix.field.TimeInForce;
-import quickfix.field.TransactTime;
+import quickfix.fix44.field.Account;
+import quickfix.fix44.field.BodyLength;
+import quickfix.fix44.field.CheckSum;
+import quickfix.fix44.field.ClOrdID;
+import quickfix.fix44.field.HandlInst;
+import quickfix.fix44.field.LastMkt;
+import quickfix.fix44.field.MsgSeqNum;
+import quickfix.fix44.field.MsgType;
+import quickfix.fix44.field.NoHops;
+import quickfix.fix44.field.OrdType;
+import quickfix.fix44.field.OrderQty;
+import quickfix.fix44.field.Price;
+import quickfix.fix44.field.SenderCompID;
+import quickfix.fix44.field.SenderSubID;
+import quickfix.fix44.field.SendingTime;
+import quickfix.fix44.field.Side;
+import quickfix.fix44.field.Symbol;
+import quickfix.fix44.field.TargetCompID;
+import quickfix.fix44.field.TimeInForce;
+import quickfix.fix44.field.TransactTime;
 import quickfix.fix44.NewOrderSingle;
 import quickfix.test.util.ExpectedTestFailure;
 
@@ -236,8 +236,11 @@ public class DataDictionaryTest extends TestCase {
 
     public void testMessageDataDictionaryMismatch() throws Exception {
         final quickfix.fix43.NewOrderSingle newSingle = new quickfix.fix43.NewOrderSingle(
-                new ClOrdID("123"), new HandlInst(HandlInst.MANUAL_ORDER), new Side(Side.BUY), new TransactTime(), new OrdType(
-                        OrdType.LIMIT));
+                new quickfix.fix43.field.ClOrdID("123"),
+                new quickfix.fix43.field.HandlInst(HandlInst.MANUAL_ORDER),
+                new quickfix.fix43.field.Side(Side.BUY),
+                new quickfix.fix43.field.TransactTime(),
+                new quickfix.fix43.field.OrdType(OrdType.LIMIT));
         newSingle.setField(new OrderQty(42));
         newSingle.setField(new Price(42.37));
         newSingle.setField(new Symbol("QFJ"));

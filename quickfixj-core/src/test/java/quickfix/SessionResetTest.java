@@ -93,7 +93,7 @@ public class SessionResetTest {
     }
 
     private Message createAdminMessage(int sequence) {
-        final TestRequest msg = new TestRequest(new TestReqID("SessionResetTest"));
+        final TestRequest msg = new TestRequest(new quickfix.fix44.field.TestReqID("SessionResetTest"));
         msg.getHeader().setString(SenderCompID.FIELD, "TARGET");
         msg.getHeader().setString(TargetCompID.FIELD, "SENDER");
         msg.getHeader().setInt(MsgSeqNum.FIELD, sequence);

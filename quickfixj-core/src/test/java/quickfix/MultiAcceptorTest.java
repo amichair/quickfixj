@@ -90,7 +90,7 @@ public class MultiAcceptorTest extends TestCase {
             testAcceptorApplication.waitForLogon();
 
             TestRequest message = new TestRequest();
-            message.set(new TestReqID("TEST" + 3));
+            message.set(new quickfix.fix42.field.TestReqID("TEST" + 3));
             SessionID sessionID = getSessionIDForClient(3);
             Session.sendToTarget(message, sessionID);
 
@@ -116,7 +116,7 @@ public class MultiAcceptorTest extends TestCase {
     private void doSessionDispatchingTest(int i) throws SessionNotFound, InterruptedException,
             FieldNotFound {
         TestRequest message = new TestRequest();
-        message.set(new TestReqID("TEST" + i));
+        message.set(new quickfix.fix42.field.TestReqID("TEST" + i));
         SessionID sessionID = getSessionIDForClient(i);
 
         testAcceptorApplication.setMessageLatch(new CountDownLatch(1));

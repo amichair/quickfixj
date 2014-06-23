@@ -21,12 +21,12 @@ package quickfix;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import quickfix.field.BeginString;
-import quickfix.field.LegSymbol;
-import quickfix.field.OrderID;
-import quickfix.field.SessionRejectReason;
-import quickfix.field.SettlDate2;
-import quickfix.field.Symbol;
+import quickfix.fix44.field.BeginString;
+import quickfix.fix44.field.LegSymbol;
+import quickfix.fix44.field.OrderID;
+import quickfix.fix44.field.SessionRejectReason;
+import quickfix.fix44.field.SettlDate2;
+import quickfix.fix44.field.Symbol;
 import quickfix.fix44.Quote;
 
 public class RepeatingGroupTest extends TestCase {

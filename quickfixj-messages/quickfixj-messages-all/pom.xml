@@ -15,13 +15,24 @@
 	<url>http://www.quickfixj.org</url>
 
 	<dependencies>
-		<!--
-			Note: dependency order matters - if a file appears in more than
-			one dependency, the shade plugin will use the first one encountered
-		-->
+		<dependency>
+			<groupId>org.quickfixj</groupId>
+			<artifactId>quickfixj-messages-combined</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.quickfixj</groupId>
 			<artifactId>quickfixj-messages-fixt11</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quickfixj</groupId>
+			<artifactId>quickfixj-messages-fix50sp2</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quickfixj</groupId>
+			<artifactId>quickfixj-messages-fix50sp1</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -52,22 +63,6 @@
 		<dependency>
 			<groupId>org.quickfixj</groupId>
 			<artifactId>quickfixj-messages-fix40</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<!--
-			We add these at the end to remain backwards-compatible with previous
-			releases of the messages-all jar, in which duplicate classes were
-			resolved by using the 5.0 version.
-		-->
-		<dependency>
-			<groupId>org.quickfixj</groupId>
-			<artifactId>quickfixj-messages-fix50sp2</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quickfixj</groupId>
-			<artifactId>quickfixj-messages-fix50sp1</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

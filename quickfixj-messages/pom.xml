@@ -24,9 +24,9 @@
 		<module>quickfixj-messages-fix50sp1</module>
 		<module>quickfixj-messages-fix50sp2</module>
 		<module>quickfixj-messages-fixt11</module>
+		<module>quickfixj-messages-combined</module>
 		<module>quickfixj-messages-all</module>
 	</modules>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.quickfixj</groupId>
@@ -51,7 +51,7 @@
 							<configuration>
 								<dictFile>src/main/resources/${fix.spec}</dictFile>
 								<packaging>quickfix.${fix.name}</packaging>
-								<fieldPackage>quickfix.field</fieldPackage>
+								<fieldPackage>quickfix.${fix.name}.field</fieldPackage>
 							</configuration>
 						</execution>
 					</executions>
@@ -69,7 +69,6 @@
 					<artifactId>maven-jar-plugin</artifactId>
 					<configuration>
 						<includes>
-							<include>quickfix/field/**</include>
 							<include>quickfix/${fix.name}/**</include>
 							<include>${fix.spec}</include>
 						</includes>

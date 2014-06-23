@@ -25,17 +25,17 @@ import static org.mockito.Mockito.*;
 import junit.framework.TestCase;
 import quickfix.field.ApplVerID;
 import quickfix.field.BeginString;
-import quickfix.field.DefaultApplVerID;
-import quickfix.field.EmailThreadID;
-import quickfix.field.EmailType;
-import quickfix.field.EncryptMethod;
-import quickfix.field.HeartBtInt;
+import quickfix.fix50.field.EmailThreadID;
+import quickfix.fix50.field.EmailType;
 import quickfix.field.MsgType;
 import quickfix.field.SenderCompID;
-import quickfix.field.Subject;
+import quickfix.fix50.field.Subject;
 import quickfix.field.TargetCompID;
 import quickfix.fix40.Logon;
 import quickfix.fix50.Email;
+import quickfix.fixt11.field.DefaultApplVerID;
+import quickfix.fixt11.field.EncryptMethod;
+import quickfix.fixt11.field.HeartBtInt;
 
 public class MessageUtilsTest extends TestCase {
 

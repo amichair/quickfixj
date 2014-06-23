@@ -28,7 +28,7 @@ import org.apache.mina.filter.codec.ProtocolCodecException;
 import org.quickfixj.CharsetSupport;
 
 import quickfix.Message;
-import quickfix.field.Headline;
+import quickfix.fix44.field.Headline;
 import quickfix.field.SenderCompID;
 import quickfix.field.TargetCompID;
 import quickfix.fix40.Logon;

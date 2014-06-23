@@ -32,12 +32,12 @@ import org.junit.Test;
 
 import quickfix.MessageCracker.RedundantHandlerException;
 import quickfix.field.ApplVerID;
-import quickfix.field.BeginString;
-import quickfix.field.DefaultApplVerID;
-import quickfix.field.EncryptMethod;
-import quickfix.field.HeartBtInt;
-import quickfix.field.SenderCompID;
-import quickfix.field.TargetCompID;
+import quickfix.fixt11.field.BeginString;
+import quickfix.fixt11.field.DefaultApplVerID;
+import quickfix.fixt11.field.EncryptMethod;
+import quickfix.fixt11.field.HeartBtInt;
+import quickfix.fixt11.field.SenderCompID;
+import quickfix.fixt11.field.TargetCompID;
 
 public class MessageCrackerTest {
     private int messageCracked;

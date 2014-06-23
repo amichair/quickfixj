@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import quickfix.field.TestReqID;
+import quickfix.fix42.field.TestReqID;
 import quickfix.fix42.TestRequest;
 import quickfix.mina.ProtocolFactory;
 
