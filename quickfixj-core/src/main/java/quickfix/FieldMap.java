@@ -156,15 +156,15 @@ public abstract class FieldMap implements Serializable {
     }
 
     public void setBoolean(int field, boolean value) {
-        setField(new StringField(field, BooleanConverter.convert(value)));
+        setField(new BooleanField(field, value));
     }
 
     public void setChar(int field, char value) {
-        setField(new StringField(field, CharConverter.convert(value)));
+        setField(new CharField(field, value));
     }
 
     public void setInt(int field, int value) {
-        setField(new StringField(field, IntConverter.convert(value)));
+        setField(new IntField(field, value));
     }
 
     public void setDouble(int field, double value) {
@@ -172,15 +172,15 @@ public abstract class FieldMap implements Serializable {
     }
 
     public void setDouble(int field, double value, int padding) {
-        setField(new StringField(field, DoubleConverter.convert(value, padding)));
+        setField(new DoubleField(field, value, padding));
     }
 
     public void setDecimal(int field, BigDecimal value) {
-        setField(new StringField(field, DecimalConverter.convert(value)));
+        setField(new DecimalField(field, value));
     }
 
     public void setDecimal(int field, BigDecimal value, int padding) {
-        setField(new StringField(field, DecimalConverter.convert(value, padding)));
+        setField(new DecimalField(field, value, padding));
     }
 
     public void setUtcTimeStamp(int field, Date value) {
@@ -188,7 +188,7 @@ public abstract class FieldMap implements Serializable {
     }
 
     public void setUtcTimeStamp(int field, Date value, boolean includeMilliseconds) {
-        setField(new StringField(field, UtcTimestampConverter.convert(value, includeMilliseconds)));
+        setField(new UtcTimeStampField(field, value, includeMilliseconds));
     }
 
     public void setUtcTimeOnly(int field, Date value) {
@@ -196,15 +196,15 @@ public abstract class FieldMap implements Serializable {
     }
 
     public void setUtcTimeOnly(int field, Date value, boolean includeMillseconds) {
-        setField(new StringField(field, UtcTimeOnlyConverter.convert(value, includeMillseconds)));
+        setField(new UtcTimeOnlyField(field, value, includeMillseconds));
     }
 
     public void setUtcDateOnly(int field, Date value) {
-        setField(new StringField(field, UtcDateOnlyConverter.convert(value)));
+        setField(new UtcDateOnlyField(field, value));
     }
 
-    StringField getField(int field) throws FieldNotFound {
-        final StringField f = (StringField) fields.get(field);
+    Field<?> getField(int field) throws FieldNotFound {
+        final Field<?> f = fields.get(field);
         if (f == null) {
             throw new FieldNotFound(field);
         }
@@ -220,68 +220,92 @@ public abstract class FieldMap implements Serializable {
     }
 
     public String getString(int field) throws FieldNotFound {
-        return getField(field).getObject();
+        return getField(field).objectAsString();
     }
 
     public boolean getBoolean(int field) throws FieldNotFound {
+        Field<?> f = getField(field);
+        if(f instanceof BooleanField)
+            return ((BooleanField)f).getValue();
         try {
-            return BooleanConverter.convert(getString(field));
+            return BooleanConverter.convert(f.objectAsString());
         } catch (final FieldConvertError e) {
             throw newIncorrectDataException(e, field);
         }
     }
 
     public char getChar(int field) throws FieldNotFound {
+        Field<?> f = getField(field);
+        if(f instanceof CharField)
+            return ((CharField)f).getValue();
         try {
-            return CharConverter.convert(getString(field));
+            return CharConverter.convert(f.objectAsString());
         } catch (final FieldConvertError e) {
             throw newIncorrectDataException(e, field);
         }
     }
 
     public int getInt(int field) throws FieldNotFound {
+        Field<?> f = getField(field);
+        if(f instanceof IntField)
+            return ((IntField)f).getValue();
         try {
-            return IntConverter.convert(getString(field));
+            return IntConverter.convert(f.objectAsString());
         } catch (final FieldConvertError e) {
             throw newIncorrectDataException(e, field);
         }
     }
 
     public double getDouble(int field) throws FieldNotFound {
+        Field<?> f = getField(field);
+        if(f instanceof DoubleField)
+            return ((DoubleField)f).getValue();
         try {
-            return DoubleConverter.convert(getString(field));
+            return DoubleConverter.convert(f.objectAsString());
         } catch (final FieldConvertError e) {
             throw newIncorrectDataException(e, field);
         }
     }
 
     public BigDecimal getDecimal(int field) throws FieldNotFound {
+        Field<?> f = getField(field);
+        if(f instanceof DecimalField)
+            return ((DecimalField)f).getValue();
         try {
-            return DecimalConverter.convert(getString(field));
+            return DecimalConverter.convert(f.objectAsString());
         } catch (final FieldConvertError e) {
             throw newIncorrectDataException(e, field);
         }
     }
 
     public Date getUtcTimeStamp(int field) throws FieldNotFound {
+        Field<?> f = getField(field);
+        if(f instanceof UtcTimeStampField)
+            return ((UtcTimeStampField)f).getValue();
         try {
-            return UtcTimestampConverter.convert(getString(field));
+            return UtcTimestampConverter.convert(f.objectAsString());
         } catch (final FieldConvertError e) {
             throw newIncorrectDataException(e, field);
         }
     }
 
     public Date getUtcTimeOnly(int field) throws FieldNotFound {
+        Field<?> f = getField(field);
+        if(f instanceof UtcTimeOnlyField)
+            return ((UtcTimeOnlyField)f).getValue();
         try {
-            return UtcTimeOnlyConverter.convert(getString(field));
+            return UtcTimeOnlyConverter.convert(f.objectAsString());
         } catch (final FieldConvertError e) {
             throw newIncorrectDataException(e, field);
         }
     }
 
     public Date getUtcDateOnly(int field) throws FieldNotFound {
+        Field<?> f = getField(field);
+        if(f instanceof UtcDateOnlyField)
+            return ((UtcDateOnlyField)f).getValue();
         try {
-            return UtcDateOnlyConverter.convert(getString(field));
+            return UtcDateOnlyConverter.convert(f.objectAsString());
         } catch (final FieldConvertError e) {
             throw newIncorrectDataException(e, field);
         }
@@ -291,47 +315,11 @@ public abstract class FieldMap implements Serializable {
         fields.put(key, field);
     }
 
-    public void setField(StringField field) {
-        if (field.getValue() == null) {
+    public void setField(Field<?> field) {
+        if (field.getObject() == null) {
             throw new NullPointerException("Null field values are not allowed.");
         }
         fields.put(field.getField(), field);
-    }
-
-    public void setField(BooleanField field) {
-        setBoolean(field.getField(), field.getValue());
-    }
-
-    public void setField(CharField field) {
-        setChar(field.getField(), field.getValue());
-    }
-
-    public void setField(IntField field) {
-        setInt(field.getField(), field.getValue());
-    }
-
-    public void setField(DoubleField field) {
-        setDouble(field.getField(), field.getValue());
-    }
-
-    public void setField(DecimalField field) {
-        setDecimal(field.getField(), field.getValue());
-    }
-
-    public void setField(UtcTimeStampField field) {
-        setUtcTimeStamp(field.getField(), field.getValue(), field.showMilliseconds());
-    }
-
-    public void setField(UtcTimeOnlyField field) {
-        setUtcTimeOnly(field.getField(), field.getValue(), field.showMilliseconds());
-    }
-
-    public void setField(UtcDateOnlyField field) {
-        setUtcDateOnly(field.getField(), field.getValue());
-    }
-
-    public void setField(BytesField field) {
-        setBytes(field.getField(), field.getObject());
     }
 
     static <T, F extends Field<T>> F updateValue(F field, T value) {
@@ -555,14 +543,11 @@ public abstract class FieldMap implements Serializable {
 
     protected void setGroupCount(int countTag, int groupSize) {
         try {
-            StringField count;
             if (groupSize == 1) {
-                count = new StringField(countTag, "1");
-                setField(countTag, count);
+                setField(new IntField(countTag, 1));
             } else {
-                count = getField(countTag);
+                ((IntField)getField(countTag)).setObject(groupSize);
             }
-            count.setValue(Integer.toString(groupSize));
         } catch (final FieldNotFound e) {
             // Shouldn't happen
             throw new RuntimeError(e);

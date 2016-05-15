@@ -633,7 +633,7 @@ public class DataDictionary {
             IncorrectDataFormat {
         final Iterator<Field<?>> iterator = map.iterator();
         while (iterator.hasNext()) {
-            final StringField field = (StringField) iterator.next();
+            final Field<?> field = iterator.next();
 
             checkHasValue(field);
 
@@ -749,7 +749,7 @@ public class DataDictionary {
         }
     }
 
-    private void checkValue(StringField field) throws IncorrectTagValue {
+    private void checkValue(Field field) throws IncorrectTagValue {
         int tag = field.getField();
         if (hasFieldValue(tag) && !isFieldValue(tag, field.getValue())) {
             throw new IncorrectTagValue(tag);
@@ -757,18 +757,23 @@ public class DataDictionary {
     }
 
     // / Check if a field has a value.
-    private void checkHasValue(StringField field) {
-        if (checkFieldsHaveValues && field.getValue().length() == 0) {
+    private void checkHasValue(Field field) {
+        Object val = field.getObject();
+        if (checkFieldsHaveValues &&
+                (val == null || (val instanceof String && ((String)val).length() == 0))) {
             throw new FieldException(SessionRejectReason.TAG_SPECIFIED_WITHOUT_A_VALUE,
                     field.getField());
         }
     }
 
     // / Check if group count matches number of groups in
-    private void checkGroupCount(StringField field, FieldMap fieldMap, String msgType) {
+    private void checkGroupCount(Field field, FieldMap fieldMap, String msgType) {
         final int fieldNum = field.getField();
         if (isGroup(msgType, fieldNum)) {
-            if (fieldMap.getGroupCount(fieldNum) != Integer.parseInt(field.getValue())) {
+            int count = field instanceof IntField
+                    ? ((IntField)field).getValue()
+                    : Integer.parseInt(field.objectAsString());
+            if (fieldMap.getGroupCount(fieldNum) != count) {
                 throw new FieldException(
                         SessionRejectReason.INCORRECT_NUMINGROUP_COUNT_FOR_REPEATING_GROUP,
                         fieldNum);

@@ -19,6 +19,8 @@
 
 package quickfix;
 
+import quickfix.field.converter.IntConverter;
+
 import java.lang.Integer;
 
 /**
@@ -56,5 +58,10 @@ public class IntField extends Field<Integer> {
 
     public boolean valueEquals(int value) {
         return getObject().equals(value);
+    }
+
+    @Override
+    public String objectAsString() {
+        return IntConverter.convert(getObject());
     }
 }

@@ -19,6 +19,8 @@
 
 package quickfix;
 
+import quickfix.field.converter.UtcTimestampConverter;
+
 import java.util.Date;
 
 /**
@@ -47,5 +49,10 @@ public class UtcTimeStampField extends DateField {
 
     boolean showMilliseconds() {
         return includeMilliseconds;
+    }
+
+    @Override
+    public String objectAsString() {
+        return UtcTimestampConverter.convert(getValue(), includeMilliseconds);
     }
 }

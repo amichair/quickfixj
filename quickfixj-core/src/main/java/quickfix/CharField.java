@@ -19,6 +19,8 @@
 
 package quickfix;
 
+import quickfix.field.converter.CharConverter;
+
 import java.lang.Character;
 
 /**
@@ -56,5 +58,10 @@ public class CharField extends Field<Character> {
 
     public boolean valueEquals(char value) {
         return getObject().equals(value);
+    }
+
+    @Override
+    public String objectAsString() {
+        return CharConverter.convert(getObject());
     }
 }

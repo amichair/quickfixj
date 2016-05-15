@@ -19,6 +19,8 @@
 
 package quickfix;
 
+import quickfix.field.converter.UtcDateOnlyConverter;
+
 import java.util.Date;
 
 /**
@@ -31,5 +33,10 @@ public class UtcDateOnlyField extends DateField {
 
     protected UtcDateOnlyField(int field, Date data) {
         super(field, data);
+    }
+
+    @Override
+    public String objectAsString() {
+        return UtcDateOnlyConverter.convert(getValue());
     }
 }

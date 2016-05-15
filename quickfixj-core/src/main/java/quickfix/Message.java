@@ -509,7 +509,7 @@ public class Message extends FieldMap {
             }
         }
 
-        StringField field = extractField(dd, header);
+        Field field = extractField(dd, header);
         while (field != null && isHeaderField(field, dd)) {
             header.setField(field);
 
@@ -523,7 +523,7 @@ public class Message extends FieldMap {
     }
 
     private boolean isNextField(DataDictionary dd, Header fields, int tag) throws InvalidMessage {
-        final StringField field = extractField(dd, header);
+        final Field field = extractField(dd, header);
         if (field == null || field.getTag() != tag) {
             return false;
         }
@@ -540,7 +540,7 @@ public class Message extends FieldMap {
     }
 
     private void parseBody(DataDictionary dd, boolean doValidation) throws InvalidMessage {
-        StringField field = extractField(dd, this);
+        Field field = extractField(dd, this);
         while (field != null) {
             if (isTrailerField(field.getField())) {
                 pushBack(field);
@@ -570,21 +570,21 @@ public class Message extends FieldMap {
         }
     }
 
-    private void setField(FieldMap fields, StringField field) {
+    private void setField(FieldMap fields, Field field) {
         if (fields.isSetField(field)) {
             throw new FieldException(SessionRejectReason.TAG_APPEARS_MORE_THAN_ONCE, field.getTag());
         }
         fields.setField(field);
     }
 
-    private void parseGroup(String msgType, StringField field, DataDictionary dd, FieldMap parent)
+    private void parseGroup(String msgType, Field field, DataDictionary dd, FieldMap parent)
             throws InvalidMessage {
         final DataDictionary.GroupInfo rg = dd.getGroup(msgType, field.getField());
         final DataDictionary groupDataDictionary = rg.getDataDictionary();
         final int[] fieldOrder = groupDataDictionary.getOrderedFields();
         int previousOffset = -1;
         final int groupCountTag = field.getField();
-        final int declaredGroupCount = Integer.parseInt(field.getValue());
+        final int declaredGroupCount = Integer.parseInt(field.objectAsString());
         parent.setField(groupCountTag, field);
         final int firstField = rg.getDelimiterField();
         boolean firstFieldFound = false;
@@ -646,7 +646,7 @@ public class Message extends FieldMap {
     }
 
     private void parseTrailer(DataDictionary dd) throws InvalidMessage {
-        StringField field = extractField(dd, trailer);
+        Field field = extractField(dd, trailer);
         while (field != null) {
             if (!isTrailerField(field, dd)) {
                 throw new FieldException(SessionRejectReason.TAG_SPECIFIED_OUT_OF_REQUIRED_ORDER,
@@ -722,16 +722,16 @@ public class Message extends FieldMap {
 
     private int position;
 
-    private StringField pushedBackField;
+    private Field pushedBackField;
 
-    public void pushBack(StringField field) {
+    public void pushBack(Field field) {
         pushedBackField = field;
     }
 
-    private StringField extractField(DataDictionary dataDictionary, FieldMap fields)
+    private Field extractField(DataDictionary dataDictionary, FieldMap fields)
             throws InvalidMessage {
         if (pushedBackField != null) {
-            final StringField f = pushedBackField;
+            final Field f = pushedBackField;
             pushedBackField = null;
             return f;
         }
@@ -786,7 +786,7 @@ public class Message extends FieldMap {
         }
 
         position = sohOffset + 1;
-        return new StringField(tag, messageData.substring(equalsOffset + 1, sohOffset));
+        return new Field(tag, messageData.substring(equalsOffset + 1, sohOffset), true);
     }
 
     /**

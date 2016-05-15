@@ -19,6 +19,8 @@
 
 package quickfix;
 
+import quickfix.field.converter.UtcTimeOnlyConverter;
+
 import java.util.Date;
 
 /*
@@ -47,6 +49,11 @@ public class UtcTimeOnlyField extends DateField {
 
     boolean showMilliseconds() {
         return includeMilliseconds;
+    }
+
+    @Override
+    public String objectAsString() {
+        return UtcTimeOnlyConverter.convert(getValue(), includeMilliseconds);
     }
 
 }
