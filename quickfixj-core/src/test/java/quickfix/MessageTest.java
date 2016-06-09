@@ -152,7 +152,7 @@ public class MessageTest {
 
     private NewOrderSingle createNewOrderSingle() {
         return new NewOrderSingle(new ClOrdID("CLIENT"), new HandlInst(
-                HandlInst.AUTOMATED_EXECUTION_ORDER_PUBLIC), new Symbol("ORCL"),
+                '2'), new Symbol("ORCL"),
                 new Side(Side.BUY), new TransactTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC)), new OrdType(OrdType.LIMIT));
     }
 
@@ -610,8 +610,7 @@ public class MessageTest {
         noc.setString(Symbol.FIELD, "ABC");
         noc.setString(TransactTime.FIELD, "20060319-09:08:19");
         noc.setString(CrossID.FIELD, "184214");
-        noc.setInt(CrossType.FIELD,
-                CrossType.CROSS_TRADE_WHICH_IS_EXECUTED_PARTIALLY_AND_THE_REST_IS_CANCELLED);
+        noc.setInt(CrossType.FIELD, 2);
         noc.setInt(CrossPrioritization.FIELD, CrossPrioritization.NONE);
 
         final NewOrderCross.NoSides side = new NewOrderCross.NoSides();
@@ -795,7 +794,7 @@ public class MessageTest {
         final Message message = new quickfix.fix44.NewOrderSingle();
         final quickfix.fix44.NewOrderSingle.NoPartyIDs partyIdGroup = new quickfix.fix44.NewOrderSingle.NoPartyIDs();
         partyIdGroup.set(new PartyID("PARTY_1"));
-        partyIdGroup.set(new PartyIDSource(PartyIDSource.DIRECTED_BROKER));
+        partyIdGroup.set(new PartyIDSource('I'));
         partyIdGroup.set(new PartyRole(PartyRole.INTRODUCING_FIRM));
         message.addGroup(partyIdGroup);
         final Message clonedMessage = (Message) message.clone();
