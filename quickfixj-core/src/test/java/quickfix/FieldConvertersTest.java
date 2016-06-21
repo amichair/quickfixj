@@ -19,10 +19,8 @@
 
 package quickfix;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import java.text.DecimalFormat;
+import java.util.*;
 
 import quickfix.field.converter.BooleanConverter;
 import quickfix.field.converter.CharConverter;
@@ -62,9 +60,43 @@ public class FieldConvertersTest extends TestCase {
     }
 
     public void testDoubleConversion() throws Exception {
+        assertEquals("0", DoubleConverter.convert(0));
         assertEquals("45.32", DoubleConverter.convert(45.32));
         assertEquals("45", DoubleConverter.convert(45));
-        assertEquals("0", DoubleConverter.convert(0));
+        assertEquals("3.12345678901234", DoubleConverter.convert(3.12345678901234d));
+        assertEquals("3.12345678901235", DoubleConverter.convert(3.12345678901235d));
+        assertEquals("0.000", DoubleConverter.convert(0, 3));
+        assertEquals("100.000", DoubleConverter.convert(100, 3));
+        assertEquals("1234567.123", DoubleConverter.convert(1234567.123d));
+        assertEquals("1234567.923", DoubleConverter.convert(1234567.923d));
+        assertEquals("1234567.1230", DoubleConverter.convert(1234567.123d, 4));
+        assertEquals("1234567.9230", DoubleConverter.convert(1234567.923d, 4));
+        Random rand = new Random();
+        for (int i = 0; i < 10000; i++) {
+            double d = rand.nextDouble();
+            //assertEquals(new DecimalFormat("0.##############").format(d), DoubleConverter.convert(d));
+            String expected = new DecimalFormat("0.##############").format(d);
+            String actual = DoubleConverter.convert(d);
+            if (!actual.equals(expected)) {
+                int j;
+                for (j = 0; j < actual.length() && j < expected.length()
+                        && actual.charAt(j) == expected.charAt(j); j++);
+                System.out.printf("expected %s[%s], actual %s[%s]%n",
+                        expected.substring(0, j), expected.substring(j),
+                        actual.substring(0, j), actual.substring(j));
+            }
+        }
+
+        long mx = Long.MAX_VALUE;
+        long mn = Long.MIN_VALUE;
+        double[] tests = { 0, 45, 45.32, 45.99,
+            Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN,
+            Integer.MAX_VALUE, Integer.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE,
+            mx / 1e13, mx / 1e14, mx / 1e14 + 1, mx / 1e14 - 1, mx / 1e15,
+            mn / 1e13, mn / 1e14, mn / 1e14 + 1, mn / 1e14 - 1,  mn / 1e15 };
+        for (double d : tests) {
+            assertEquals(new DecimalFormat("0.##############").format(d), DoubleConverter.convert(d));
+        }
         assertEquals(45.32, DoubleConverter.convert("45.32"), 0);
         assertEquals(45.32, DoubleConverter.convert("45.3200"), 0);
         assertEquals(0.00340244, DoubleConverter.convert("0.00340244000"), 0);

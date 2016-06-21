@@ -34,6 +34,65 @@ import quickfix.RuntimeError;
 public class DoubleConverter {
     private static final Pattern DECIMAL_PATTERN = Pattern.compile("-?\\d*(\\.\\d*)?");
     private static final ThreadLocal<DecimalFormat[]> THREAD_DECIMAL_FORMATS = new ThreadLocal<DecimalFormat[]>();
+    private static final double FAST_FORMAT_MIN = Long.MIN_VALUE / 1e14;
+    private static final double FAST_FORMAT_MAX = Long.MAX_VALUE / 1e14;
+
+    static void validatePadding(int padding) {
+        // FieldConvertError not supported in setDouble methods on Message, so we throw RuntimeError
+        if (padding < 0) {
+            throw new RuntimeError("padding must be between 0 and 14 zeroes: " + padding);
+        }
+        if (padding > 14) {
+            throw new RuntimeError("maximum padding of 14 zeroes is supported: " + padding);
+        }
+    }
+
+    static DecimalFormat getDecimalFormat(int padding) {
+        validatePadding(padding);
+        DecimalFormat[] decimalFormats = THREAD_DECIMAL_FORMATS.get();
+        if (decimalFormats == null) {
+            decimalFormats = new DecimalFormat[14];
+            THREAD_DECIMAL_FORMATS.set(decimalFormats);
+        }
+        DecimalFormat f = decimalFormats[padding];
+        if (f == null) {
+            StringBuilder sb = new StringBuilder(16).append("0.");
+            for (int i = 0; i < 14; i++) {
+                sb.append(i < padding ? '0' : '#');
+            }
+            f = new DecimalFormat(sb.toString());
+            f.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.US));
+            decimalFormats[padding] = f;
+        }
+        return f;
+    }
+
+    static StringBuilder fastFormatDouble(StringBuilder builder, double d, int padding) {
+        validatePadding(padding);
+        if (d < 0) {
+            builder.append('-');
+            d = -d;
+        }
+        long scaled = (long)(d * 1e14 + 0.5);
+        long factor = (long)1e14;
+        int digits = 15;
+        while (factor * 10 <= scaled && factor < 1000000000000000000L) {
+            factor *= 10;
+            digits++;
+        }
+        padding = 14 - padding;
+        while (digits > 0) {
+            long c = scaled / factor % 10;
+            if (digits <= padding && scaled % (10 * factor) == 0)
+                break;
+            if (digits == 14)
+                builder.append('.');
+            builder.append((char)('0' + c));
+            factor /= 10;
+            digits--;
+        }
+        return builder;
+    }
 
     /**
      * Converts a double to a string with no padding.
@@ -46,32 +105,6 @@ public class DoubleConverter {
         return convert(d, 0);
     }
 
-    static DecimalFormat getDecimalFormat(int padding) {
-        if (padding > 14) {
-            // FieldConvertError not supported in setDouble methods on Message
-            throw new RuntimeError("maximum padding of 14 zeroes is supported: " + padding);
-        }
-        DecimalFormat[] decimalFormats = THREAD_DECIMAL_FORMATS.get();
-        if (decimalFormats == null) {
-            decimalFormats = new DecimalFormat[14];
-            THREAD_DECIMAL_FORMATS.set(decimalFormats);
-        }
-        DecimalFormat f = decimalFormats[padding];
-        if (f == null) {
-            StringBuilder buffer = new StringBuilder("0.");
-            for (int i = 0; i < padding; i++) {
-                buffer.append('0');
-            }
-            for (int i = padding; i < 14; i++) {
-                buffer.append('#');
-            }
-            f = new DecimalFormat(buffer.toString());
-            f.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.US));
-            decimalFormats[padding] = f;
-        }
-        return f;
-    }
-
     /**
      * Converts a double to a string with padding.
      *
@@ -80,6 +113,20 @@ public class DoubleConverter {
      * @return the formatted String representing the double.
      */
     public static String convert(double d, int padding) {
+        // This method is used quite a bit and had a very inefficient implementation,
+        // so optimizing it is worth the effort. We now use two implementations:
+        //
+        // - The custom fast format is very small, efficient, and garbage-less.
+        // However it is limited in the range of values it supports, and
+        // also doesn't handle special cases like NaN, infinity or -0.0.
+        //
+        // - The DecimalFormat is much slower and has lots of overhead, due to
+        // all the formatting bells and whistles which we don't need, such as
+        // thread locals (or garbage), internal StringBuffers, synchronized blocks,
+        // internal helper classes, and a whole lot of code. We use it only when
+        // the fast format cannot be used.
+        if (d > FAST_FORMAT_MIN && d < FAST_FORMAT_MAX && !Double.isNaN(d))
+            return fastFormatDouble(new StringBuilder(16), d , padding).toString();
         return getDecimalFormat(padding).format(d);
     }
 
